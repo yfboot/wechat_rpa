@@ -1,0 +1,7 @@
+auto_send: true
+group_name: AI研发工作室飙能群
+message: 这是一条自动发送的消息。使用python 执行
+message_file: message.txt
+search_box_x: 708
+search_box_y: 226
+wechat_path: D:\app\WeChat\WeChat.exe
