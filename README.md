@@ -19,6 +19,7 @@
 - **详细日志**：提供全面的日志记录，方便排查问题
 
 ## 📁 项目结构
+
 ```
 wechat_rpa/
 │
@@ -48,11 +49,13 @@ source venv/bin/activate # Linux/macOS
 ```
 
 ### 3. 安装依赖
+
 ```bash
 pip install -r requirements.txt
 ```
 
 ### 4. 准备模板图片
+
 项目使用图像识别技术定位微信界面元素，需要准备以下模板图片：
 
 1. **群聊搜索结果**：在微信中搜索目标群聊，截取左侧搜索结果的图片
@@ -66,21 +69,22 @@ pip install -r requirements.txt
 > 💡 提示：截图时尽量只包含目标元素及其少量周围内容，保持图片清晰，避免过多无关元素。
 
 ### 5. 修改配置文件 config.yaml
+
 ```yaml
 # 微信安装路径（注意使用双反斜杠或原始字符串格式）
-wechat_path: "D:\\app\\WeChat\\WeChat.exe"  
+wechat_path: "D:\\app\\WeChat\\WeChat.exe"
 
 # 目标群聊名称（需要完全匹配）
-group_name: "AI研发工作室飙能群"            
+group_name: "AI研发工作室飙能群"
 
 # 要发送的消息内容（当message_file不可用时使用）
-message: "你好，这是一条自动发送的消息。"    
+message: "你好，这是一条自动发送的消息。"
 
 # 可选：从外部文件读取消息（优先级高于message）
-message_file: "message.txt"                
+message_file: "message.txt"
 
 # 是否自动发送消息（true-发送，false-仅输入不发送）
-auto_send: false                           
+auto_send: false
 
 # 搜索框坐标（由校准功能自动生成，通常不需手动修改）
 # search_box_x: 745
@@ -88,6 +92,7 @@ auto_send: false
 ```
 
 ### 6. 准备消息文件（可选）
+
 如果需要发送较长的消息或使用变量替换功能，可以创建`message.txt`文件：
 
 ```text
@@ -102,25 +107,32 @@ auto_send: false
 ```
 
 支持的变量：
+
 - `{time}` - 当前时间（如：14:30:45）
 - `{date}` - 当前日期（如：2025-05-16）
 - `{datetime}` - 完整日期时间（如：2025-05-16 14:30:45）
 - `{weekday}` - 星期几（如：Monday）
 
 ### 7. 校准搜索框坐标（推荐）
+
 首次使用时强烈建议校准搜索框坐标，以提高识别成功率：
+
 ```bash
 python main.py --calibrate
 ```
+
 按照提示，在5秒倒计时内将鼠标移动到微信搜索框的中心位置。
 
 ### 8. 启动程序
+
 标准模式：
+
 ```bash
 python main.py
 ```
 
 调试模式（显示更详细的日志）：
+
 ```bash
 python main.py --debug
 ```
@@ -156,6 +168,7 @@ python main.py --debug
 ## 🛠️ 高级用法
 
 ### 命令行参数
+
 ```bash
 # 校准搜索框坐标
 python main.py --calibrate
@@ -168,6 +181,7 @@ python main.py --calibrate --debug
 ```
 
 ### 日志分析
+
 程序运行时会生成详细的日志文件`wechat_rpa.log`，包含每一步操作的详情，是排查问题的重要工具。
 
 ---
