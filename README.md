@@ -64,7 +64,7 @@ source venv/bin/activate # Linux/macOS
 pip install -r requirements.txt
 ```
 
-### 4. 准备模板图片
+### 4. 准备模板图片（已经提供好，不用准备）
 
 如果您计划使用图像识别功能（搜索方式优先级2），需要准备以下模板图片：
 
