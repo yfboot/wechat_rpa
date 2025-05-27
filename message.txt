@@ -1,7 +1,48 @@
-大家好！
+📰 今日资讯速递 (2025-05-22) 📰
 
-这是一条从外部文件读取的测试消息。
-当前时间: {time}
-今天日期: {date}
+3. 📄 江苏电力交易中心有限公司关于公示南京深度智控科技有限公司注销市场注册的公告
+   📱 江苏电力交易中心  |  📅 2025-05-16
+   🔗 http://mp.weixin.qq.com/s?__biz=MzI2MzU0NTAzMQ==&mid=2247497206&idx=1&sn=eb811615d18fe480e080a87811d48e4d&chksm=eab8fc5eddcf754892414f3004d17b965929d9962ac86b3a950b7527c97c93e385c2cf737c93#rd
+
+7. 📄 关于发布安徽省2025年6月份月度集中竞价交易成交结果的公告
+   📱 安徽电力交易中心  |  📅 2025-05-16
+   🔗 http://mp.weixin.qq.com/s?__biz=MzUxMjExODY1MQ==&mid=2247494619&idx=1&sn=0bc72b1eb0d8152bf86f64300f8a7c83&chksm=f96bf1cfce1c78d9f5c0fb1ab4f577cc57978500a06f7d590a7f58cd39b09275b3fd82fc8b98#rd
+
+8. 📄 关于发布2025年5月绿色电力多日挂牌交易（5月24日-5月31日）成交结果的公告
+   📱 安徽电力交易中心  |  📅 2025-05-16
+   🔗 http://mp.weixin.qq.com/s?__biz=MzUxMjExODY1MQ==&mid=2247494619&idx=2&sn=9a00e1405d932a6e56ad2ff4fc966567&chksm=f96bf1cfce1c78d9ec9594a43cb5f6fcd1e3d6d8067ca39d5b6ae56561799583262293331dd8#rd
+
+1. 📄 培训｜交易平台账号安全培训宣贯
+   📱 浙江电力交易中心有限公司  |  📅 2025-05-15
+   🔗 http://mp.weixin.qq.com/s?__biz=Mzg2MDEwODI3Ng==&mid=2247494362&idx=1&sn=cfd95240d685811ec966bb31f3fdc921&chksm=ce29ce41f95e47570705586a723303ff4d01bb2b862405e0c7a33c68ef589ecdc06ba1c79720#rd
+
+4. 📄 关于开展电力交易员共享培训讲师遴选的通知
+   📱 江苏电力交易中心  |  📅 2025-05-15
+   🔗 http://mp.weixin.qq.com/s?__biz=MzI2MzU0NTAzMQ==&mid=2247497202&idx=1&sn=b5d3f984186178e105d75196c522c0bd&chksm=eab8fc5addcf754cf3c00a14b2a9577cff9aa6c85b7e2bcc6a023c7df25a2aaa288b079ebffd#rd
+
+5. 📄 江苏电力交易中心有限公司关于公示2025年第十一批（总第八十七批）售电公司注册重大信息变更的公告
+   📱 江苏电力交易中心  |  📅 2025-05-15
+   🔗 http://mp.weixin.qq.com/s?__biz=MzI2MzU0NTAzMQ==&mid=2247497202&idx=2&sn=a0235f8fdb104cc9811c3817e84bc635&chksm=eab8fc5addcf754c6c7bef0b4d0c14ac8a33f4f77702290f508de9adef0955b3ea60cfc6bcb1#rd
+
+6. 📄 江苏电力交易中心有限公司关于江苏省2025年第四批（总第六十九批）售电公司公示结果的通知
+   📱 江苏电力交易中心  |  📅 2025-05-15
+   🔗 http://mp.weixin.qq.com/s?__biz=MzI2MzU0NTAzMQ==&mid=2247497202&idx=3&sn=2c67132afb5b708730f687123b830ffa&chksm=eab8fc5addcf754c460376fdb0c68eb61083234f52e3bf1ca6b52c6ac9ed33810dcb0bfb4640#rd
+
+9. 📄 关于开展安徽省2025年6月月度绿色电力挂牌交易的市场公告
+   📱 安徽电力交易中心  |  📅 2025-05-15
+   🔗 http://mp.weixin.qq.com/s?__biz=MzUxMjExODY1MQ==&mid=2247494613&idx=1&sn=e01519e3dd51161f0858f05eece7d7da&chksm=f96bf1c1ce1c78d73011275853b397f0d48956beacef4291743ab7fe3027153efd5b597869df#rd
+
+2. 📄 关于组织开展2025年5月下旬集中竞价交易的通知
+   📱 浙江电力交易中心有限公司  |  📅 2025-05-14
+   🔗 http://mp.weixin.qq.com/s?__biz=Mzg2MDEwODI3Ng==&mid=2247494358&idx=1&sn=c6f2976f8e43db08e8ad3b6b49916317&chksm=ce29ce4df95e475bf1fd56f0dcb1b9bd42d474775f88f568cc2e55586a849c97482440b346b1#rd
+
+10. 📄 关于发布安徽省2025年双边交易合同6月份分月电量曲线调整交易成交结果的公告
+   📱 安徽电力交易中心  |  📅 2025-05-14
+   🔗 http://mp.weixin.qq.com/s?__biz=MzUxMjExODY1MQ==&mid=2247494609&idx=1&sn=2c19bdf91248187679970630ceb6cfc7&chksm=f96bf1c5ce1c78d3f147bcf85c3cef946154ad134472d6b483d897ea16d160fb38d73ad93028#rd
+
+📌 点击文章标题链接可直接阅读原文
+
+--这是rpa自动发送的消息
+消息发送时间: 15:49:47
 
 --这是rpa自动发送的消息

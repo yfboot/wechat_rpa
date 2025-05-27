@@ -145,9 +145,19 @@ def get_message_content(config):
 def calibrate_search_box():
     """校准搜索框坐标"""
     logger.info("开始搜索框坐标校准...")
+    
+    # 加载配置，获取校准超时时间，默认为10秒
+    config = load_config()
+    if not config:
+        logger.error("无法加载配置，将使用默认空配置")
+        config = {}
+    
+    calibration_timeout = config.get('calibration_timeout', 10)
+    logger.debug(f"校准等待时间设置为 {calibration_timeout} 秒")
+    
     print("\n==== 微信搜索框坐标校准 ====")
-    print("请在5秒内将鼠标移动到微信搜索框的中心位置...")
-    for i in range(5, 0, -1):
+    print(f"请在{calibration_timeout}秒内将鼠标移动到微信搜索框的中心位置...")
+    for i in range(calibration_timeout, 0, -1):
         print(f"{i}秒...", end="\r")
         time.sleep(1)
 
@@ -157,7 +167,6 @@ def calibrate_search_box():
     print(f"\n检测到坐标: ({x}, {y})")
 
     # 更新配置文件
-    config = load_config()
     if not config:
         logger.error("无法加载配置，将使用默认空配置")
         config = {}
