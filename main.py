@@ -26,6 +26,7 @@ import os
 import subprocess
 import time
 import traceback
+import threading
 
 import cv2
 import numpy as np
@@ -518,6 +519,55 @@ def search_group_chat(group_name):
         return True
 
 
+def lock_window_focus(window_title, stop_event):
+    """
+    持续监控并确保指定窗口保持焦点
+    
+    参数:
+        window_title (str): 要锁定焦点的窗口标题
+        stop_event (threading.Event): 停止信号
+    """
+    logger.info(f"开始锁定窗口焦点: '{window_title}'")
+    check_interval = 0.5  # 检查间隔（秒）
+    
+    try:
+        while not stop_event.is_set():
+            # 查找匹配标题的窗口
+            windows = gw.getWindowsWithTitle(window_title)
+            if windows:
+                target_window = windows[0]
+                
+                # 检查窗口是否激活，如果没有，则重新激活
+                if not target_window.isActive:
+                    logger.debug(f"窗口 '{window_title}' 失去焦点，重新激活中...")
+                    
+                    # 确保窗口不是最小化状态
+                    if target_window.isMinimized:
+                        target_window.restore()
+                        time.sleep(0.1)
+                    
+                    # 激活窗口
+                    target_window.activate()
+                    
+                    # 点击窗口标题栏确保焦点
+                    click_x = target_window.left + target_window.width // 2
+                    click_y = target_window.top + 20
+                    pyautogui.click(click_x, click_y)
+                    
+                    logger.debug(f"已重新激活窗口: '{window_title}'")
+            else:
+                logger.warning(f"找不到标题为 '{window_title}' 的窗口")
+                
+            # 等待一段时间再检查
+            time.sleep(check_interval)
+    
+    except Exception as e:
+        logger.error(f"窗口焦点锁定线程发生异常: {e}")
+        logger.debug(f"异常详情: {traceback.format_exc()}")
+    
+    logger.info("窗口焦点锁定已停止")
+
+
 def send_message_to_group(config):
     """主流程：激活微信，搜索群聊，发送消息"""
     GROUP_NAME = config['group_name']
@@ -539,59 +589,88 @@ def send_message_to_group(config):
     if not activate_wechat(config):
         logger.error("无法激活微信，任务终止")
         return False
-
-    # Step 2: 定位并激活搜索框
-    logger.info("Step 2: 定位并激活搜索框")
-    if not ensure_search_box_focus(config):
-        logger.error("无法激活搜索框，任务终止")
-        return False
-
-    # Step 3: 搜索群聊
-    logger.info("Step 3: 搜索群聊")
-    if not search_group_chat(GROUP_NAME):
-        logger.error("无法找到群聊，任务终止")
-        return False
-
-    # Step 4: 输入消息
-    logger.info("Step 4: 输入消息")
-    logger.info(f"消息内容 (前100字符): '{MESSAGE[:100]}...'" if len(MESSAGE) > 100 else f"消息内容: '{MESSAGE}'")
-
+    
+    # 创建一个事件用于通知线程停止
+    stop_focus_lock = threading.Event()
+    
+    # 启动窗口焦点锁定线程
+    logger.info("启动窗口焦点锁定...")
+    focus_thread = threading.Thread(
+        target=lock_window_focus,
+        args=("微信", stop_focus_lock),
+        daemon=True  # 设为守护线程，主线程结束时自动结束
+    )
+    focus_thread.start()
+    logger.debug("窗口焦点锁定线程已启动")
+    
     try:
-        # 清空输入框
-        logger.debug("清空消息输入框")
-        pyautogui.hotkey('ctrl', 'a')
-        time.sleep(DELAY_SHORT)
-        pyautogui.press('backspace')
-        time.sleep(DELAY_SHORT)
-
-        # 确保焦点在输入框内
-        logger.debug("点击确保焦点在输入框内")
-        pyautogui.click()
-        time.sleep(DELAY_SHORT)
-
-        # 输入消息内容
-        logger.info("开始输入消息内容...")
-        success = type_text_safely(MESSAGE)
-        if not success:
-            logger.error("消息输入失败")
+        # Step 2: 定位并激活搜索框
+        logger.info("Step 2: 定位并激活搜索框")
+        if not ensure_search_box_focus(config):
+            logger.error("无法激活搜索框，任务终止")
+            stop_focus_lock.set()  # 停止焦点锁定
             return False
 
-        logger.info("消息已成功输入到输入框")
-    except Exception as e:
-        logger.error(f"输入消息时发生错误: {e}")
-        logger.debug(f"异常详情: {traceback.format_exc()}")
-        return False
+        # Step 3: 搜索群聊
+        logger.info("Step 3: 搜索群聊")
+        if not search_group_chat(GROUP_NAME):
+            logger.error("无法找到群聊，任务终止")
+            stop_focus_lock.set()  # 停止焦点锁定
+            return False
 
-    # 根据配置决定是否自动发送
-    if AUTO_SEND:
-        logger.info("自动发送模式已开启，正在发送消息...")
-        pyautogui.press('enter')
-        logger.info("✅ 消息发送完成！")
-    else:
-        logger.info("已将消息输入到输入框，但未自动发送（自动发送模式已关闭）")
+        # Step 4: 输入消息
+        logger.info("Step 4: 输入消息")
+        logger.info(f"消息内容 (前100字符): '{MESSAGE[:100]}...'" if len(MESSAGE) > 100 else f"消息内容: '{MESSAGE}'")
 
-    logger.info("========== 微信自动化任务完成 ==========")
-    return True
+        try:
+            # 清空输入框
+            logger.debug("清空消息输入框")
+            pyautogui.hotkey('ctrl', 'a')
+            time.sleep(DELAY_SHORT)
+            pyautogui.press('backspace')
+            time.sleep(DELAY_SHORT)
+
+            # 确保焦点在输入框内
+            logger.debug("点击确保焦点在输入框内")
+            pyautogui.click()
+            time.sleep(DELAY_SHORT)
+
+            # 输入消息内容
+            logger.info("开始输入消息内容...")
+            success = type_text_safely(MESSAGE)
+            if not success:
+                logger.error("消息输入失败")
+                stop_focus_lock.set()  # 停止焦点锁定
+                return False
+
+            logger.info("消息已成功输入到输入框")
+        except Exception as e:
+            logger.error(f"输入消息时发生错误: {e}")
+            logger.debug(f"异常详情: {traceback.format_exc()}")
+            stop_focus_lock.set()  # 停止焦点锁定
+            return False
+
+        # 根据配置决定是否自动发送
+        if AUTO_SEND:
+            logger.info("自动发送模式已开启，正在发送消息...")
+            pyautogui.press('enter')
+            logger.info("✅ 消息发送完成！")
+        else:
+            logger.info("已将消息输入到输入框，但未自动发送（自动发送模式已关闭）")
+            
+        logger.info("========== 微信自动化任务完成 ==========")
+        
+        # 给用户一些时间查看结果
+        time.sleep(DELAY_LONG)
+        
+        return True
+        
+    finally:
+        # 无论成功或失败，都停止焦点锁定
+        logger.info("停止窗口焦点锁定...")
+        stop_focus_lock.set()
+        focus_thread.join(timeout=1.0)  # 等待线程结束，最多等待1秒
+        logger.debug("窗口焦点锁定已解除")
 
 
 if __name__ == '__main__':
