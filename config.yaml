@@ -1,7 +1,6 @@
 auto_send: false
 calibration_timeout: 10
-# group_name: AI研发工作室飙能群
-group_name: 文件传输助手
+group_name: AI消息推送群
 message: 这是一条自动发送的消息。使用python 执行
 message_file: message.txt
 search_box_x: 708

@@ -85,7 +85,7 @@ pip install -r requirements.txt
 wechat_path: "D:\\app\\WeChat\\WeChat.exe"
 
 # 目标群聊名称（需要完全匹配）
-group_name: "AI研发工作室飙能群"
+group_name: "AI消息推送群"
 
 # 要发送的消息内容（当message_file不可用时使用）
 message: "你好，这是一条自动发送的消息。"
