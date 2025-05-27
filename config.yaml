@@ -1,8 +1,13 @@
 auto_send: false
 calibration_timeout: 10
-group_name: AI研发工作室飙能群
+# group_name: AI研发工作室飙能群
+group_name: 文件传输助手
 message: 这是一条自动发送的消息。使用python 执行
 message_file: message.txt
-search_box_x: 733
-search_box_y: 287
+search_box_x: 708
+search_box_y: 226
+# 搜索快捷键，格式为[modifier, key]，例如["ctrl", "f"]
+search_shortcut: ["ctrl", "f"]
+# 群聊搜索方式优先级: 1-快捷键搜索, 2-图像识别, 3-坐标定位
+search_method_priority: [1, 2, 3]
 wechat_path: D:\app\WeChat\WeChat.exe

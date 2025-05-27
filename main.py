@@ -457,22 +457,86 @@ def type_text_safely(text):
             return False
 
 
-def search_group_chat(group_name):
+def search_by_shortcut(group_name, config=None):
     """
-    搜索指定的群聊并进入。
+    使用快捷键打开微信搜索，然后搜索群聊
     
-    采用混合策略：
-    1. 使用剪贴板安全输入群名，确保中文字符正确
-    2. 优先使用图像识别找到群聊搜索结果
-    3. 如识别失败，使用键盘导航选择第一个结果
+    参数:
+        group_name (str): 要搜索的群聊名称
+        config (dict): 配置信息，包含快捷键设置
+        
+    返回:
+        bool: 成功返回True
+    """
+    logger.info("使用快捷键方式搜索群聊...")
+    
+    # 从配置中获取快捷键，默认为ctrl+f
+    default_shortcut = ["ctrl", "f"]
+    search_shortcut = default_shortcut
+    
+    if config and 'search_shortcut' in config:
+        search_shortcut = config.get('search_shortcut', default_shortcut)
+    
+    logger.debug(f"使用搜索快捷键: {search_shortcut}")
+    
+    try:
+        # 使用配置的快捷键激活搜索
+        if len(search_shortcut) == 2:
+            logger.debug(f"按下 {search_shortcut[0]}+{search_shortcut[1]} 打开搜索")
+            pyautogui.hotkey(search_shortcut[0], search_shortcut[1])
+        else:
+            # 如果配置格式不正确，使用默认快捷键
+            logger.warning(f"快捷键格式不正确，使用默认的 Ctrl+F")
+            pyautogui.hotkey('ctrl', 'f')
+            
+        time.sleep(DELAY_SHORT)
+        
+        # 清除可能存在的搜索内容
+        logger.debug("清除搜索框内容")
+        pyautogui.hotkey('ctrl', 'a')
+        time.sleep(DELAY_SHORT)
+        pyautogui.press('backspace')
+        time.sleep(DELAY_SHORT)
+        
+        # 输入群聊名称
+        logger.info(f"输入群聊名称: '{group_name}'")
+        success = type_text_safely(group_name)
+        if not success:
+            logger.error("群名输入失败")
+            return False
+            
+        time.sleep(DELAY_LONG)
+        
+        # 按回车确认搜索
+        logger.debug("按下回车确认搜索")
+        pyautogui.press('enter')
+        time.sleep(DELAY_LONG)
+        
+        # 按回车选择第一个搜索结果
+        logger.debug("再次按下回车选择第一个结果")
+        pyautogui.press('enter')
+        time.sleep(DELAY_SHORT)
+        
+        logger.info("快捷键搜索完成")
+        return True
+        
+    except Exception as e:
+        logger.error(f"快捷键搜索失败: {e}")
+        logger.debug(f"异常详情: {traceback.format_exc()}")
+        return False
+
+
+def search_by_image_recognition(group_name):
+    """
+    通过图像识别搜索群聊
     
     参数:
         group_name (str): 要搜索的群聊名称
         
     返回:
-        bool: 成功找到并进入群聊返回True，失败返回False
+        bool: 成功找到并进入群聊返回True
     """
-    logger.info(f"开始搜索群聊: '{group_name}'")
+    logger.info(f"使用图像识别方式搜索群聊: '{group_name}'")
 
     # 清除搜索框内容
     clear_search_box()
@@ -493,7 +557,7 @@ def search_group_chat(group_name):
     time.sleep(DELAY_LONG)
     logger.debug("已按回车键，等待搜索结果...")
 
-    # 策略1：使用图像识别点击群聊搜索结果
+    # 使用图像识别点击群聊搜索结果
     logger.info("尝试点击群聊搜索结果...")
     group_templates = ['png/group_result_template.png', 'png/group_result_backup.png']
     logger.debug(f"使用模板图查找群聊: {group_templates}")
@@ -506,17 +570,92 @@ def search_group_chat(group_name):
         logger.info("成功点击进入群聊")
         return True
     else:
-        # 策略2：使用键盘导航选择第一个搜索结果
-        logger.warning("未找到群聊模板图，尝试键盘选择")
-        logger.debug("按下方向键选择第一个结果")
-        pyautogui.press('down')  # 选择第一个搜索结果
-        time.sleep(DELAY_SHORT)
+        logger.warning("未找到群聊模板图")
+        return False
 
-        logger.debug("按下回车键确认选择")
-        pyautogui.press('enter')
-        time.sleep(DELAY_SHORT)
-        logger.info("已通过键盘操作进入群聊")
-        return True
+
+def search_by_coordinates(group_name):
+    """
+    通过预先校准的坐标搜索群聊
+    
+    参数:
+        group_name (str): 要搜索的群聊名称
+        
+    返回:
+        bool: 成功找到并进入群聊返回True
+    """
+    logger.info(f"使用坐标定位方式搜索群聊: '{group_name}'")
+    
+    # 清除搜索框内容
+    clear_search_box()
+
+    # 输入群名
+    logger.info(f"正在输入群名: '{group_name}'")
+    success = type_text_safely(group_name)
+    if not success:
+        logger.error("群名输入失败")
+        return False
+
+    time.sleep(DELAY_LONG)
+
+    # 模拟回车键触发搜索
+    logger.info("模拟回车键确认搜索")
+    pyautogui.press('enter')
+    time.sleep(DELAY_LONG)
+
+    # 使用键盘导航选择第一个搜索结果
+    logger.debug("按下方向键选择第一个结果")
+    pyautogui.press('down')  # 选择第一个搜索结果
+    time.sleep(DELAY_SHORT)
+
+    logger.debug("按下回车键确认选择")
+    pyautogui.press('enter')
+    time.sleep(DELAY_SHORT)
+    logger.info("已通过键盘操作进入群聊")
+    return True
+
+
+def search_group_chat(group_name, config=None):
+    """
+    基于配置的优先级，使用不同方式搜索群聊
+    
+    参数:
+        group_name (str): 要搜索的群聊名称
+        config (dict): 配置信息，包含搜索方式优先级
+        
+    返回:
+        bool: 成功找到并进入群聊返回True，失败返回False
+    """
+    logger.info(f"开始搜索群聊: '{group_name}'")
+    
+    # 默认优先级：快捷键，图像识别，坐标定位
+    default_priority = [1, 2, 3]
+    
+    # 从配置中获取优先级，如果不存在则使用默认值
+    if config and 'search_method_priority' in config:
+        priority = config.get('search_method_priority', default_priority)
+    else:
+        priority = default_priority
+    
+    logger.info(f"搜索方式优先级: {priority}")
+    
+    # 按照优先级尝试不同的搜索方式
+    for method in priority:
+        if method == 1:
+            logger.info("尝试使用快捷键方式搜索...")
+            if search_by_shortcut(group_name, config):
+                return True
+        elif method == 2:
+            logger.info("尝试使用图像识别方式搜索...")
+            if search_by_image_recognition(group_name):
+                return True
+        elif method == 3:
+            logger.info("尝试使用坐标定位方式搜索...")
+            if search_by_coordinates(group_name):
+                return True
+    
+    logger.error("所有搜索方式都失败了")
+    return False
 
 
 def lock_window_focus(window_title, stop_event):
@@ -604,22 +743,17 @@ def send_message_to_group(config):
     logger.debug("窗口焦点锁定线程已启动")
     
     try:
-        # Step 2: 定位并激活搜索框
-        logger.info("Step 2: 定位并激活搜索框")
-        if not ensure_search_box_focus(config):
-            logger.error("无法激活搜索框，任务终止")
-            stop_focus_lock.set()  # 停止焦点锁定
-            return False
-
-        # Step 3: 搜索群聊
-        logger.info("Step 3: 搜索群聊")
-        if not search_group_chat(GROUP_NAME):
+        # 无需单独激活搜索框，直接进入搜索步骤
+        
+        # Step 2: 搜索群聊
+        logger.info("Step 2: 搜索群聊")
+        if not search_group_chat(GROUP_NAME, config):
             logger.error("无法找到群聊，任务终止")
             stop_focus_lock.set()  # 停止焦点锁定
             return False
 
-        # Step 4: 输入消息
-        logger.info("Step 4: 输入消息")
+        # Step 3: 输入消息
+        logger.info("Step 3: 输入消息")
         logger.info(f"消息内容 (前100字符): '{MESSAGE[:100]}...'" if len(MESSAGE) > 100 else f"消息内容: '{MESSAGE}'")
 
         try:
